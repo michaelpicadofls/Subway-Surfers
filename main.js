@@ -59,6 +59,11 @@ var coins_collected = 0;
 
 var cubeRotation = 0;
 
+var score = 0;
+var coins_collected = 0;
+var gameOver = false;    // ← esta línea nueva
+
+
 main();
 
 function main() {
@@ -552,7 +557,20 @@ function main() {
           if (player.pos[1] >= trainF[i].pos[1] - 4 && player.pos[1] <= trainF[i].pos[1] + 4) {
             if (player.pos[2] >= trainF[i].pos[2] - 18 && player.pos[2] <= trainF[i].pos[2]) {
               score = -player.pos[2] + coins_collected;
-              Die();   
+              Die();
+              // Enviar al iframe padre (opcional)
+              window.parent.postMessage({ score: score, coins: coins_collected }, '*');
+        
+              // Enviar al servidor Railway
+              fetch('https://leaderboardss-production.up.railway.app/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  name: prompt("Ingresa tu nombre:"), // puedes personalizarlo
+                  score: score,
+                  coins: coins_collected
+                })
+              });
               alert("YOU LOST\nScore: " + score + "\nCoins: " + coins_collected);
             }
           }
@@ -567,6 +585,19 @@ function main() {
             if (player.pos[2] <= boxes[i].pos[2] + 3 && player.pos[2] >= boxes[i].pos[2] - 3) {
               score = -player.pos[2] + coins_collected;
               Die();
+              // Enviar al iframe padre (opcional)
+                window.parent.postMessage({ score: score, coins: coins_collected }, '*');
+          
+                // Enviar al servidor Railway
+                fetch('https://leaderboardss-production.up.railway.app/submit', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    name: prompt("Ingresa tu nombre:"), // puedes personalizarlo
+                    score: score,
+                    coins: coins_collected
+                  })
+                });
               alert("YOU LOST\nScore: " + score + "\nCoins: " + coins_collected);
             }
           }
@@ -581,6 +612,19 @@ function main() {
             if (player.pos[2] <= manholes[i].pos[2] + 2.3 && player.pos[2] >= manholes[i].pos[2] - 2.3) {
               score = -player.pos[2] + coins_collected;
               Die();
+                // Enviar al iframe padre (opcional)
+                window.parent.postMessage({ score: score, coins: coins_collected }, '*');
+          
+                // Enviar al servidor Railway
+                fetch('https://leaderboardss-production.up.railway.app/submit', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    name: prompt("Ingresa tu nombre:"), // puedes personalizarlo
+                    score: score,
+                    coins: coins_collected
+                  })
+                });
               alert("YOU LOST\nScore: " + score + "\nCoins: " + coins_collected);
             }
           }
@@ -773,6 +817,19 @@ function main() {
 
     if (player.pos[2] <= -800) {
       score = -player.pos[2] + coins_collected;
+        // Enviar al iframe padre (opcional)
+        window.parent.postMessage({ score: score, coins: coins_collected }, '*');
+  
+        // Enviar al servidor Railway
+        fetch('https://leaderboardss-production.up.railway.app/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: prompt("Ingresa tu nombre:"), // puedes personalizarlo
+            score: score,
+            coins: coins_collected
+          })
+        });
       alert("YOU WON\nScore: " + score + "\nCoins: " + coins_collected);
     }
 
@@ -1023,6 +1080,33 @@ function loadShader(gl, type, source) {
 }
 
 function Die() {
+  if (gameOver) return;     // si ya murió, no vuelve a entrar
+  gameOver = true;
+
+  document.getElementById('music').pause();
+  document.getElementById('crash').play();
+
+  // 1) Pedir nombre sólo una vez
+  const playerName = prompt("Ingresa tu nombre:");
+
+  // 2) Enviar al iframe padre
+  window.parent.postMessage({ score, coins: coins_collected }, '*');
+
+  // 3) Enviar al servidor Railway
+  fetch('https://leaderboardss-production.up.railway.app/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: playerName,
+      score: score,
+      coins: coins_collected
+    })
+  });
+
+  // 4) opcional: alert final
+  alert((player.pos[2] <= -800 ? "YOU WON" : "YOU LOST") +
+        "\nScore: " + score +
+        "\nCoins: " + coins_collected);
   document.getElementById('music').pause();
   document.getElementById('crash').play();
 }
