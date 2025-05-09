@@ -557,7 +557,7 @@ function main() {
 window.parent.postMessage({ score: score, coins: coins_collected }, '*');
 
 // Enviar al servidor Railway
-fetch('https://tu-app.railway.app/submit', {
+fetch('https://leaderboardss-production.up.railway.app/submit', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -584,7 +584,7 @@ fetch('https://tu-app.railway.app/submit', {
 window.parent.postMessage({ score: score, coins: coins_collected }, '*');
 
 // Enviar al servidor Railway
-fetch('https://tu-app.railway.app/submit', {
+fetch('https://leaderboardss-production.up.railway.app/submit', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -611,7 +611,7 @@ fetch('https://tu-app.railway.app/submit', {
 window.parent.postMessage({ score: score, coins: coins_collected }, '*');
 
 // Enviar al servidor Railway
-fetch('https://tu-app.railway.app/submit', {
+fetch('https://leaderboardss-production.up.railway.app/submit', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -816,7 +816,7 @@ fetch('https://tu-app.railway.app/submit', {
       window.parent.postMessage({ score: score, coins: coins_collected }, '*');
 
       // Enviar al servidor Railway
-      fetch('https://tu-app.railway.app/submit', {
+      fetch('https://leaderboardss-production.up.railway.app/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
